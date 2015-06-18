@@ -1,6 +1,5 @@
 data=read.table("kirch.maf",fill=T,head=T)
 
-
 ref=as.character(data$Reference_Allele)
 allele1=as.character(data$Tumor_Seq_Allele1)
 allele2=as.character(data$Tumor_Seq_Allele2)
@@ -14,14 +13,28 @@ chromosome=counts
 for(i in 2:length(genes)){
 	ref=as.character(data$Reference_Allele[which(data$Hugo_Symbol==genes[i])])
 	allele1=as.character(data$Tumor_Seq_Allele1[which(data$Hugo_Symbol==genes[i])])
-	counts[i]=length(which(ref!=allele1))
+	counts[i]=length(which(ref!=allele1)) 
 	chromosome[i]=as.character(data$Chromosome[which(data$Hugo_Symbol==genes[i])])[1]
 }
 	
+patients=unique(data$Barcode)
+
+list=c(1:length(patients))*0
+
+for(i in 1:length(patients)){
+	ref=as.character(data$Reference_Allele[which(data$Tumor_Sample_Barcode==patients[i])])
+	allele1=as.character(data$Tumor_Seq_Allele1[which(data$Tumor_Sample_Barcode==patient[i])])
+	list[i]=as.character(data$Hugo_Symbol[which(ref!=allele1)]
+
+}
+
+
 
 frame=data.frame(chromosome, counts, genes)
 
 p<- ggplot(frame, aes(factor(chromosome), counts)) + theme_bw() 
 p<- p + theme(legend.position="none") + geom_boxplot(aes(fill = factor(chromosome))) 
 p<- p + ylim(0,2) + ylab("Variant Counts") + xlab("Chromosome")
+
+
 
