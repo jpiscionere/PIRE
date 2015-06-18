@@ -19,13 +19,15 @@ for(i in 2:length(genes)){
 	
 patients=unique(data$Barcode)
 
-list=c(1:length(patients))*0
+p=NULL
+
+
 
 for(i in 1:length(patients)){
 	ref=as.character(data$Reference_Allele[which(data$Tumor_Sample_Barcode==patients[i])])
-	allele1=as.character(data$Tumor_Seq_Allele1[which(data$Tumor_Sample_Barcode==patient[i])])
-	list[i]=as.character(data$Hugo_Symbol[which(ref!=allele1)]
-
+	allele1=as.character(data$Tumor_Seq_Allele1[which(data$Tumor_Sample_Barcode==patients[i])])
+	list=as.character(data$Hugo_Symbol[which(ref!=allele1)])
+	p=append(p,list)
 }
 
 
