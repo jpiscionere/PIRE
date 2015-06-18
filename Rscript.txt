@@ -19,14 +19,9 @@ for(i in 2:length(genes)){
 }
 	
 
-
-f <- function(x) {
-  r <- quantile(x, probs = c(0.025, 0.1573, 0.5, 0.84, 0.975))
-  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
-  r
-}
-
 frame=data.frame(chromosome, counts, genes)
 
-p <- ggplot(frame, aes(factor(chromosome), counts)) + theme_bw() + theme(legend.position="none") + geom_boxplot(aes(fill = factor(chromosome))) + ylim(0,2) + ylab("Variant Counts") + xlab("Chromosome")
+p<- ggplot(frame, aes(factor(chromosome), counts)) + theme_bw() 
+p<- p + theme(legend.position="none") + geom_boxplot(aes(fill = factor(chromosome))) 
+p<- p + ylim(0,2) + ylab("Variant Counts") + xlab("Chromosome")
 
