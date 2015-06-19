@@ -22,7 +22,9 @@ for(i in 2:length(genes)){
 	counts[i]=length(which(ref!=allele1)) 
 	chromosome[i]=as.character(data$Chromosome[which(data$Hugo_Symbol==genes[i])])[1]
 }
-	
+
+for(i in 1:length(chromosome_counts)){chromosome_counts[i]=sum(counts[which(chromosome==unique(chromosome)[i])])}
+
 patients=unique(data$Barcode)
 
 p=c(1:length(patients))
@@ -39,9 +41,47 @@ for(i in 1:length(patients)){
 
 frame=data.frame(chromosome, counts, genes)
 
+data=subset(frame, counts > 1)
+
 p<- ggplot(frame, aes(factor(chromosome), counts)) + theme_bw() 
 p<- p + theme(legend.position="none") + geom_boxplot(aes(fill = factor(chromosome))) 
 p<- p + ylim(0,2) + ylab("Variant Counts") + xlab("Chromosome")
 
+a=data$Hugo_Symbol[which(data$Chromosome==3)]
+rev(sort(unique(a)))[1:10]
 
 
+gene_frame=data.frame(counts,genes)
+gene_frame=gene_frame[with(gene_frame,order(-counts)),]
+top_genes=gene_frame$genes[c(1:50)]
+top_genes_frame=data.frame(genes=gene_frame$genes[c(1:50)],counts=gene_frame$counts[c(1:50)])
+
+for(i in 1:length(top_genes)){c=as.character(unique(data$Tumor_Sample_Barcode[which(data$Hugo_Symbol==as.character(top_genes_frame$genes[i]))])) ; b=append(b,c)  }
+a=patients_with_top_mutations[duplicated(patients_with_top_mutations, fromLast=TRUE) | duplicated(patients_with_top_mutations)]
+try=data$Hugo_Symbol[which(data$Tumor_Sample_Barcode==patients_with_top_mutations[1])]
+
+vector_common_mutations<-c(1:length(patients_with_top_mutations))*0
+
+for(i in 1:length(patients_with_top_mutations)){
+	a=data$Hugo_Symbol[which(data$Tumor_Sample_Barcode==patients_with_top_mutations[i])];
+	vector_common_mutations[i]=Reduce(intersect, list(a,top_genes));
+}
+
+for(i in 1:length(patients_with_VHL)){a=data$Hugo_Symbol[which(data$Tumor_Sample_Barcode==patients_with_VHL[i] & data$Reference_Allele!=as.character(data$Tumor_Seq_Allele1) & data$Hugo_Symbol!="VHL" )];
+	list_of_associated_genes=append(list_of_associated_genes,as.character(a))
+	}
+
+
+a=data$Hugo_Symbol[which(data$Chromosome==3 & data$Reference_Allele!=as.character(data$Tumor_Seq_Allele1) &data$Hugo_Symbol!="VHL" ) ] 
+
+patients=unique(data$Tumor_Sample_Barcode[which(data$Reference_Allele!=as.character(data$Tumor_Seq_Allele1)  &  (data$Hugo_Symbol=="VHL" | data$Hugo_Symbol=="PBRM1"))])
+
+for(i in 1:length(patients)){
+	b=data$Hugo_Symbol[which(data$Tumor_Sample_Barcode==patients[i] & data$Reference_Allele!=as.character(data$Tumor_Seq_Allele1) & data$Hugo_Symbol!="PBRM1" & data$Hugo_Symbol!="VHL" )   ];
+	b=as.character(b);
+	a=append(a,b);
+}
+
+correlated_genes$correlated_genes=correlated_genes$correlated_genes[which(correlated_genes$correlated_genes!="Unknown")]
+
+sort(table(correlated_genes$a),decreasing=TRUE)
