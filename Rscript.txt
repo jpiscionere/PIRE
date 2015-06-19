@@ -1,5 +1,11 @@
 data=read.table("kirch.maf",fill=T,head=T)
 
+
+a=unlist(strsplit(unique(as.character(data$Matched_Norm_Sample_Barcode)),"-"))
+ids=unique(a[which(a=="TCGA")+2])
+
+
+
 ref=as.character(data$Reference_Allele)
 allele1=as.character(data$Tumor_Seq_Allele1)
 allele2=as.character(data$Tumor_Seq_Allele2)
@@ -19,7 +25,7 @@ for(i in 2:length(genes)){
 	
 patients=unique(data$Barcode)
 
-p=NULL
+p=c(1:length(patients))
 
 
 
@@ -27,9 +33,8 @@ for(i in 1:length(patients)){
 	ref=as.character(data$Reference_Allele[which(data$Tumor_Sample_Barcode==patients[i])])
 	allele1=as.character(data$Tumor_Seq_Allele1[which(data$Tumor_Sample_Barcode==patients[i])])
 	list=as.character(data$Hugo_Symbol[which(ref!=allele1)])
-	p=append(p,list)
+	p[i]=append(p[i],list)
 }
-
 
 
 frame=data.frame(chromosome, counts, genes)
