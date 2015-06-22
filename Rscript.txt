@@ -85,3 +85,37 @@ for(i in 1:length(patients)){
 correlated_genes$correlated_genes=correlated_genes$correlated_genes[which(correlated_genes$correlated_genes!="Unknown")]
 
 sort(table(correlated_genes$a),decreasing=TRUE)
+
+
+
+variant_type=c(1:length(reference))*0
+variant_type[which(reference=="A" & mutation=="C")]="AtoC"
+variant_type[which(reference=="A" & mutation=="G")]="AtoG"
+variant_type[which(reference=="A" & mutation=="T")]="AtoT"
+variant_type[which(reference=="C" & mutation=="G")]="CtoG"
+variant_type[which(reference=="C" & mutation=="T")]="CtoT"
+variant_type[which(reference=="C" & mutation=="A")]="CtoA"
+variant_type[which(reference=="G" & mutation=="A")]="GtoA"
+variant_type[which(reference=="G" & mutation=="C")]="GtoC"
+variant_type[which(reference=="G" & mutation=="T")]="GtoT"
+variant_type[which(reference=="T" & mutation=="A")]="TtoA"
+variant_type[which(reference=="T" & mutation=="C")]="TtoC"
+variant_type[which(reference=="T" & mutation=="G")]="TtoG"
+
+qplot(reference, ..density.., data=frame, geom="density", fill=variant_type)
+
+a=data$Hugo_Symbol[which(data$Reference_Allele!=as.character(data$Tumor_Seq_Allele1))]
+a=as.data.frame(table(a))
+top_genes=as.character(a$a[which(a$Freq>15 & a$a!="Unknown")])
+mutation_alleles=data$Tumor_Seq_Allele1
+reference_alleles=data$Reference_Allele
+genes=data$Hugo_Symbol
+frame2=data.frame(genes,reference_alleles,mutation_alleles)
+x.sub=frame2[frame2$genes %in% top_genes,]
+
+variant_types=c("AtoC","AtoG","AtoT","CtoA","CtoT","CtoG","GtoA","GtoC","GtoT","TtoA","TtoC","TtoG")
+genes=("A","C","T","G")
+
+variant_type[which(reference==genes[1] & mutation==genes[2])]=variant_types[1]
+
+
